@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ИМПУЛЬС — Спортивный центр на Химмаше | Екатеринбург</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        lime: { 50:'#F7FEE7', 100:'#ECFCCB', 200:'#D9F99D', 300:'#BEF264', 400:'#A3E635', 500:'#84CC16', 600:'#65A30D', 700:'#4D7C0F', 800:'#3F6212', 900:'#365314' },
+        carbon: { 50:'#F9FAFB', 100:'#F3F4F6', 200:'#E5E7EB', 300:'#D1D5DB', 400:'#9CA3AF', 500:'#6B7280', 600:'#4B5563', 700:'#374151', 800:'#1F2937', 900:'#111827', 950:'#0A0F1A' }
+      },
+      fontFamily: { sans: ['Inter', 'sans-serif'] }
+    }
+  }
+}
+</script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+::selection { background: rgba(163,230,53,0.3); color: #fff; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0A0F1A; }
+::-webkit-scrollbar-thumb { background: #84CC16; border-radius: 3px; }
+
+#preloader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #0A0F1A;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+}
+#preloader.hidden { opacity: 0; visibility: hidden; }
+.preloader-pulse {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 3px solid rgba(163,230,53,0.2);
+  border-top-color: #A3E635;
+  animation: spin 0.8s linear infinite;
+  filter: drop-shadow(0 0 12px rgba(163,230,53,0.5));
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 1000;
+  background: linear-gradient(90deg, #84CC16, #A3E635, #BEF264);
+  width: 0%; transition: width 0.1s linear;
+  box-shadow: 0 0 10px rgba(163,230,53,0.4);
+}
+
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.active { opacity: 1; transform: translateY(0); }
+.reveal-left {
+  opacity: 0; transform: translateX(-50px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-left.active { opacity: 1; transform: translateX(0); }
+.reveal-right {
+  opacity: 0; transform: translateX(50px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-right.active { opacity: 1; transform: translateX(0); }
+.reveal-scale {
+  opacity: 0; transform: scale(0.92);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-scale.active { opacity: 1; transform: scale(1); }
+
+.stagger-children .reveal:nth-child(1) { transition-delay: 0.05s; }
+.stagger-children .reveal:nth-child(2) { transition-delay: 0.1s; }
+.stagger-children .reveal:nth-child(3) { transition-delay: 0.15s; }
+.stagger-children .reveal:nth-child(4) { transition-delay: 0.2s; }
+.stagger-children .reveal:nth-child(5) { transition-delay: 0.25s; }
+.stagger-children .reveal:nth-child(6) { transition-delay: 0.3s; }
+
+.glass {
+  background: rgba(17, 24, 39, 0.5);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(163, 230, 53, 0.08);
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.glass:hover {
+  border-color: rgba(163, 230, 53, 0.25);
+  box-shadow: 0 20px 50px -15px rgba(132, 204, 22, 0.12), inset 0 0 30px rgba(163, 230, 53, 0.02);
+  transform: translateY(-3px);
+}
+
+.glow-border {
+  position: relative; overflow: hidden;
+}
+.glow-border::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: linear-gradient(135deg, rgba(163,230,53,0), rgba(163,230,53,0.3), rgba(163,230,53,0));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity 0.4s;
+}
+.glow-border:hover::before { opacity: 1; }
+
+.gradient-text {
+  background: linear-gradient(135deg, #BEF264, #84CC16, #A3E635);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+.lime-glow { text-shadow: 0 0 20px rgba(163,230,53,0.3), 0 0 40px rgba(132,204,22,0.15); }
+
+.pulse-dot { animation: pulseDot 2s ease-in-out infinite; }
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(163,230,53,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(163,230,53,0); }
+}
+
+.shimmer { position: relative; overflow: hidden; }
+.shimmer::after {
+  content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(163,230,53,0.03), transparent);
+  animation: shimmer 4s infinite;
+}
+@keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
+
+.counter { font-variant-numeric: tabular-nums; }
+
+.nav-blur { backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); }
+
+#mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+#mobile-menu.open { transform: translateX(0); }
+
+/* Grid pattern */
+.grid-pattern {
+  background-image: linear-gradient(rgba(163,230,53,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(163,230,53,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Price card highlight */
+.price-popular {
+  background: linear-gradient(135deg, rgba(132,204,22,0.15), rgba(17,24,39,0.6));
+  border: 1px solid rgba(163,230,53,0.25);
+}
+
+/* Float */
+.float-anim { animation: floatY 6s ease-in-out infinite; }
+@keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Toast */
+#toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9000;
+  transform: translateY(120px); opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+
+/* Energy line */
+.energy-line {
+  position: absolute; height: 2px; width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(163,230,53,0.15), transparent);
+}
+</style>
+</head>
+<body class="bg-carbon-950 text-white font-sans antialiased overflow-x-hidden grid-pattern">
+
+<!-- Preloader -->
+<div id="preloader">
+  <div class="text-center">
+    <div class="preloader-pulse"></div>
+    <p class="text-[10px] tracking-[0.3em] uppercase text-lime-400 mt-6 font-semibold">ИМПУЛЬС</p>
+  </div>
+</div>
+
+<!-- Scroll Progress -->
+<div id="scroll-progress"></div>
+
+<!-- Canvas Particles -->
+<canvas id="particleCanvas" class="fixed inset-0 z-0 pointer-events-none"></canvas>
+
+<!-- NAVIGATION -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur bg-carbon-950/60 border-b border-white/5 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between">
+    <a href="#hero" class="flex items-center gap-2.5 group">
+      <div class="w-9 h-9 rounded-lg bg-lime-500 flex items-center justify-center text-carbon-950 font-black text-sm group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-lime-500/30">⚡</div>
+      <div class="flex flex-col leading-none">
+        <span class="text-sm font-bold tracking-wide">ИМПУЛЬС</span>
+        <span class="text-[9px] tracking-[0.12em] uppercase text-lime-400/70 font-medium">Химмаш</span>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-7">
+      <a href="#combat" class="text-xs font-medium tracking-wider uppercase text-carbon-400 hover:text-lime-400 transition-colors">Единоборства</a>
+      <a href="#fitness" class="text-xs font-medium tracking-wider uppercase text-carbon-400 hover:text-lime-400 transition-colors">Фитнес</a>
+      <a href="#pricing" class="text-xs font-medium tracking-wider uppercase text-carbon-400 hover:text-lime-400 transition-colors">Цены</a>
+      <a href="#infra" class="text-xs font-medium tracking-wider uppercase text-carbon-400 hover:text-lime-400 transition-colors">О центре</a>
+      <a href="#cta" class="ml-2 px-5 py-2 rounded-full bg-lime-500 text-carbon-950 text-xs font-bold tracking-wider uppercase hover:bg-lime-400 hover:shadow-lg hover:shadow-lime-500/30 transition-all duration-300">Записаться</a>
+    </div>
+    <button id="burger" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 transition-colors" aria-label="Меню">
+      <div class="flex flex-col gap-1.5">
+        <span class="burger-line w-5 h-[1.5px] bg-white transition-all duration-300 origin-center"></span>
+        <span class="burger-line w-5 h-[1.5px] bg-white transition-all duration-300"></span>
+        <span class="burger-line w-3.5 h-[1.5px] bg-white transition-all duration-300 origin-center"></span>
+      </div>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="fixed inset-y-0 right-0 w-72 z-[60] bg-carbon-900/95 nav-blur border-l border-lime-500/10 flex flex-col p-8 pt-20 gap-6">
+  <button id="close-menu" class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 transition-colors">
+    <span class="iconify text-xl text-carbon-400" data-icon="lucide:x"></span>
+  </button>
+  <a href="#combat" class="mobile-link text-lg font-medium text-carbon-300 hover:text-lime-400 transition-colors">Единоборства</a>
+  <a href="#fitness" class="mobile-link text-lg font-medium text-carbon-300 hover:text-lime-400 transition-colors">Фитнес</a>
+  <a href="#pricing" class="mobile-link text-lg font-medium text-carbon-300 hover:text-lime-400 transition-colors">Цены</a>
+  <a href="#infra" class="mobile-link text-lg font-medium text-carbon-300 hover:text-lime-400 transition-colors">О центре</a>
+  <div class="mt-auto">
+    <a href="#cta" class="mobile-link block text-center px-5 py-3 rounded-full bg-lime-500 text-carbon-950 text-sm font-bold tracking-wider uppercase hover:bg-lime-400 transition-all">Записаться</a>
+  </div>
+</div>
+<div id="menu-overlay" class="fixed inset-0 z-[55] bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+<!-- HERO -->
+<section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(132,204,22,0.08)_0%,transparent_50%)]"></div>
+  <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-carbon-950 to-transparent"></div>
+
+  <!-- Decorative energy lines -->
+  <div class="energy-line top-[30%] left-0 w-1/3"></div>
+  <div class="energy-line top-[65%] right-0 w-1/4"></div>
+
+  <!-- Floating elements -->
+  <div class="absolute top-[15%] right-[10%] text-5xl text-lime-500/5 font-black select-none float-anim">⚡</div>
+  <div class="absolute bottom-[20%] left-[8%] text-7xl text-lime-400/3 font-black select-none float-anim" style="animation-delay:-3s">3</div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-5 text-center pt-20">
+    <!-- Badge -->
+    <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-lime-500/30 bg-lime-500/10 mb-8">
+      <span class="w-2 h-2 rounded-full bg-lime-400 pulse-dot"></span>
+      <span class="text-[11px] tracking-[0.12em] uppercase text-lime-300 font-semibold">Открыт с сентября 2024 • Химмаш</span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="reveal text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] mb-6">
+      <span class="block text-white">ИМПУЛЬС</span>
+      <span class="block mt-2 gradient-text lime-glow">СПОРТ</span>
+    </h1>
+
+    <p class="reveal text-base sm:text-lg md:text-xl text-carbon-300 max-w-2xl mx-auto mb-3 leading-relaxed">
+      Современный трёхэтажный комплекс — <span class="text-lime-400 font-semibold">топовые тренеры</span>, залы с профессиональным покрытием, комфортные раздевалки
+    </p>
+    <p class="reveal text-sm text-carbon-500 mb-10">ул. Бородина, 28 • Екатеринбург</p>
+
+    <!-- CTAs -->
+    <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+      <a href="#cta" class="group px-8 py-3.5 rounded-full bg-lime-500 text-carbon-950 text-sm font-bold tracking-wider uppercase hover:bg-lime-400 transition-all duration-300 shadow-xl shadow-lime-500/20 hover:shadow-lime-400/40 hover:shadow-2xl flex items-center gap-2">
+        <span class="iconify" data-icon="lucide:zap"></span>
+        Начать тренировки
+      </a>
+      <a href="#combat" class="px-8 py-3.5 rounded-full border border-white/10 text-carbon-300 text-sm font-semibold tracking-wider uppercase hover:border-lime-500/30 hover:text-lime-400 hover:bg-lime-500/5 transition-all duration-300">
+        Выбрать направление
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="reveal grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-black text-white counter" data-target="3">0</div>
+        <div class="text-[10px] tracking-[0.15em] uppercase text-carbon-500 mt-1 font-medium">Этажа</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-black text-white counter" data-target="9">0</div>
+        <div class="text-[10px] tracking-[0.15em] uppercase text-carbon-500 mt-1 font-medium">Направлений</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-black text-white counter" data-target="500">0</div>
+        <div class="text-[10px] tracking-[0.15em] uppercase text-carbon-500 mt-1 font-medium">₽ Пробная</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-black text-white">09–22</div>
+        <div class="text-[10px] tracking-[0.15em] uppercase text-carbon-500 mt-1 font-medium">Ежедневно</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+    <span class="text-[9px] tracking-[0.2em] uppercase text-carbon-600">Scroll</span>
+    <span class="iconify text-carbon-600" data-icon="lucide:chevron-down"></span>
+  </div>
+</section>
+
+<!-- COMBAT SPORTS -->
+<section id="combat" class="relative py-24 md:py-32 overflow-hidden">
+  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lime-500/20 to-transparent"></div>
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="text-center mb-16">
+      <span class="reveal text-[11px] tracking-[0.2em] uppercase text-lime-400 font-semibold mb-4 block">🥊 Единоборства</span>
+      <h2 class="reveal text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
+        Бойцовский <span class="gradient-text">характер</span>
+      </h2>
+      <p class="reveal text-carbon-400 mt-4 max-w-xl mx-auto text-sm">От новичков до профессионалов — воспитываем технику, характер и дисциплину</p>
+    </div>
+
+    <!-- Coach highlight -->
+    <div class="reveal mb-10 max-w-2xl mx-auto">
+      <div class="glass rounded-2xl p-5 flex items-center gap-5 shimmer">
+        <div class="w-14 h-14 rounded-xl bg-lime-500/10 flex items-center justify-center shrink-0">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:award"></span>
+        </div>
+        <div>
+          <p class="text-sm text-carbon-300">С центром сотрудничает <strong class="text-white">Константин Симонов</strong> — <span class="text-lime-400 font-semibold">трёхкратный чемпион мира</span> по рукопашному бою</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Combat grid -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children">
+      <!-- Boxing -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:swords"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Бокс</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed mb-4">Одна из самых любимых и сильных секций центра. Классическая школа ударов, защиты и движения.</p>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Дети</span>
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Взрослые</span>
+        </div>
+      </div>
+      <!-- Kickboxing -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:footprints"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Кикбоксинг</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed mb-4">Мощная работа руками и ногами. Любимая секция по отзывам посетителей центра.</p>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Дети</span>
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Взрослые</span>
+        </div>
+      </div>
+      <!-- Sambo -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:shield"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Самбо</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed mb-4">Борьба и броски. Отечественное боевое искусство — эффективная самооборона и соревновательный спорт.</p>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Дети</span>
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Взрослые</span>
+        </div>
+      </div>
+      <!-- Muay Thai -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:flame"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Тайский бокс (Муай-тай)</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed mb-4">«Искусство восьми конечностей» — удары кулаками, ногами, локтями и коленями.</p>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Дети</span>
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Взрослые</span>
+        </div>
+      </div>
+      <!-- Taekwondo -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:wind"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Тхэквондо</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed mb-4">Корейское боевое искусство — зрелищные удары ногами, скорость и олимпийская дисциплина.</p>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Дети</span>
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Взрослые</span>
+        </div>
+      </div>
+      <!-- MMA placeholder -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:target"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">ММА / Рукопашный бой</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed mb-4">Комплексная подготовка бойца. Ударная техника + борьба — универсальный формат.</p>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Дети</span>
+          <span class="px-2 py-0.5 rounded bg-lime-500/10 text-[10px] text-lime-400 font-semibold">Взрослые</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FITNESS -->
+<section id="fitness" class="relative py-24 md:py-32 overflow-hidden">
+  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lime-500/20 to-transparent"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(132,204,22,0.04)_0%,transparent_50%)]"></div>
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="text-center mb-16">
+      <span class="reveal text-[11px] tracking-[0.2em] uppercase text-lime-400 font-semibold mb-4 block">🏋️ Фитнес и тренинг</span>
+      <h2 class="reveal text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
+        Форма и <span class="gradient-text">энергия</span>
+      </h2>
+      <p class="reveal text-carbon-400 mt-4 max-w-xl mx-auto text-sm">Рельеф, выносливость и заряд энергии — групповые программы для взрослых</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children">
+      <!-- Functional -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:activity"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Функциональный тренинг</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed">Сила, баланс и координация. Вес собственного тела + оборудование.</p>
+      </div>
+      <!-- HIIT -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text->2xl text-lime-400" data-icon="lucide:zap"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">HIIT</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed">Высокоинтенсивный интервальный тренинг. Максимум сжигания калорий за минимум времени.</p>
+      </div>
+      <!-- Pump -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:music"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Pamp</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed">Динамичная силовая тренировка с мини-штангой под музыку. Все группы мышц без перегруза суставов.</p>
+      </div>
+      <!-- Healthy Back -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:heart-pulse"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Здоровая спина</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed">Восстановительный класс для укрепления мышечного корсета и снятия напряжения.</p>
+      </div>
+      <!-- Glutes+Abs -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:target"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Ягодицы + Пресс</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed">Целенаправленная работа над проблемными зонами. Силовые + статические упражнения.</p>
+      </div>
+      <!-- Stretch+Plastic -->
+      <div class="reveal glass glow-border rounded-2xl p-6 shimmer group">
+        <div class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center mb-4 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-2xl text-lime-400" data-icon="lucide:stretch-horizontal"></span>
+        </div>
+        <h3 class="text-lg font-bold mb-2">Растяжка и Пластика</h3>
+        <p class="text-xs text-carbon-400 leading-relaxed">Гибкость, грация и чувственная пластика. Восстановление и развитие подвижности.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="relative py-24 md:py-32 overflow-hidden">
+  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lime-500/20 to-transparent"></div>
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="text-center mb-16">
+      <span class="reveal text-[11px] tracking-[0.2em] uppercase text-lime-400 font-semibold mb-4 block">💳 Прайс-лист</span>
+      <h2 class="reveal text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
+        Прозрачные <span class="gradient-text">цены</span>
+      </h2>
+      <p class="reveal text-carbon-400 mt-4 max-w-xl mx-auto text-sm">Единая сетка для единоборств: бокс, самбо, тхэквондо, ММА</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 max-w-5xl mx-auto stagger-children">
+      <!-- Trial -->
+      <div class="reveal glass rounded-2xl p-6 flex flex-col items-center text-center">
+        <div class="text-[10px] tracking-[0.15em] uppercase text-carbon-500 font-semibold mb-3">Пробная</div>
+        <div class="text-3xl font-black text-white mb-1">500</div>
+        <div class="text-xs text-carbon-500 mb-4">₽ / занятие</div>
+        <div class="w-8 h-0.5 rounded bg-lime-500/30 mb-4"></div>
+        <p class="text-[11px] text-carbon-400">Первое знакомство с направлением</p>
+      </div>
+      <!-- Single -->
+      <div class="reveal glass rounded-2xl p-6 flex flex-col items-center text-center">
+        <div class="text-[10px] tracking-[0.15em] uppercase text-carbon-500 font-semibold mb-3">Разовое</div>
+        <div class="text-3xl font-black text-white mb-1">850</div>
+        <div class="text-xs text-carbon-500 mb-4">₽ / занятие</div>
+        <div class="w-8 h-0.5 rounded bg-lime-500/30 mb-4"></div>
+        <p class="text-[11px] text-carbon-400">Однократное посещение</p>
+      </div>
+      <!-- 4 -->
+      <div class="reveal glass rounded-2xl p-6 flex flex-col items-center text-center">
+        <div class="text-[10px] tracking-[0.15em] uppercase text-carbon-500 font-semibold mb-3">4 занятия</div>
+        <div class="text-3xl font-black text-white mb-1">3 300</div>
+        <div class="text-xs text-carbon-500 mb-4">₽ / абонемент</div>
+        <div class="w-8 h-0.5 rounded bg-lime-500/30 mb-4"></div>
+        <p class="text-[11px] text-carbon-400">825 ₽ за занятие</p>
+      </div>
+      <!-- 8 — POPULAR -->
+      <div class="reveal price-popular rounded-2xl p-6 flex flex-col items-center text-center relative">
+        <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-lime-500 text-[9px] text-carbon-950 font-bold tracking-wider uppercase">Популярный</div>
+        <div class="text-[10px] tracking-[0.15em] uppercase text-lime-400 font-semibold mb-3">8 занятий</div>
+        <div class="text-3xl font-black text-white mb-1">5 600</div>
+        <div class="text-xs text-lime-400/70 mb-4">₽ / абонемент</div>
+        <div class="w-8 h-0.5 rounded bg-lime-500/50 mb-4"></div>
+        <p class="text-[11px] text-lime-400/60">700 ₽ за занятие</p>
+      </div>
+      <!-- 12 — BEST -->
+      <div class="reveal glass rounded-2xl p-6 flex flex-col items-center text-center relative border-lime-500/20">
+        <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-carbon-800 border border-lime-500/30 text-[9px] text-lime-400 font-bold tracking-wider uppercase">Выгодный</div>
+        <div class="text-[10px] tracking-[0.15em] uppercase text-lime-400 font-semibold mb-3">12 занятий</div>
+        <div class="text-3xl font-black text-white mb-1">6 800</div>
+        <div class="text-xs text-lime-400/70 mb-4">₽ / абонемент</div>
+        <div class="w-8 h-0.5 rounded bg-lime-500/50 mb-4"></div>
+        <p class="text-[11px] text-lime-400/60">567 ₽ за занятие</p>
+      </div>
+    </div>
+
+    <!-- Per-lesson visualization -->
+    <div class="reveal mt-12 max-w-2xl mx-auto">
+      <div class="glass rounded-2xl p-6">
+        <div class="text-xs text-carbon-400 mb-4 text-center">Стоимость одного занятия при покупке абонемента</div>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-carbon-500 w-16 shrink-0 text-right">Разовое</span>
+            <div class="flex-1 h-6 rounded bg-carbon-800 overflow-hidden">
+              <div class="h-full rounded bg-gradient-to-r from-carbon-600 to-carbon-500 flex items-center justify-end pr-2" style="width:100%">
+                <span class="text-[10px] text-white font-semibold">850 ₽</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-carbon-500 w-16 shrink-0 text-right">4 зан.</span>
+            <div class="flex-1 h-6 rounded bg-carbon-800 overflow-hidden">
+              <div class="h-full rounded bg-gradient-to-r from-lime-500/40 to-lime-500/60 flex items-center justify-end pr-2" style="width:97%">
+                <span class="text-[10px] text-white font-semibold">825 ₽</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-carbon-500 w-16 shrink-0 text-right">8 зан.</span>
+            <div class="flex-1 h-6 rounded bg-carbon-800 overflow-hidden">
+              <div class="h-full rounded bg-gradient-to-r from-lime-500/60 to-lime-500/80 flex items-center justify-end pr-2" style="width:82%">
+                <span class="text-[10px] text-white font-semibold">700 ₽</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-carbon-500 w-16 shrink-0 text-right">12 зан.</span>
+            <div class="flex-1 h-6 rounded bg-carbon-800 overflow-hidden">
+              <div class="h-full rounded bg-gradient-to-r from-lime-400 to-lime-500 flex items-center justify-end pr-2" style="width:67%">
+                <span class="text-[10px] text-carbon-950 font-bold">567 ₽</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFRASTRUCTURE -->
+<section id="infra" class="relative py-24 md:py-32 overflow-hidden">
+  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lime-500/20 to-transparent"></div>
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+      <div class="reveal-left">
+        <span class="text-[11px] tracking-[0.2em] uppercase text-lime-400 font-semibold mb-4 block">Инфраструктура</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight mb-6">
+          Всё для <span class="gradient-text">комфорта</span>
+        </h2>
+        <p class="text-carbon-400 leading-relaxed mb-8">
+          Трёхэтажный комплекс, открывшийся в сентябре 2024 года. Продуманная планировка, современное оснащение и внимание к деталям.
+        </p>
+        <div class="space-y-4">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-lime-500/10 flex items-center justify-center shrink-0">
+              <span class="iconify text-lime-400" data-icon="lucide:layers"></span>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold mb-0.5">3 этажа</h4>
+              <p class="text-xs text-carbon-400">Просторный комплекс с разделением по направлениям</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-lime-500/10 flex items-center justify-center shrink-0">
+              <span class="iconify text-lime-400" data-icon="lucide:shield-check"></span>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold mb-0.5">Мягкое профессиональное покрытие</h4>
+              <p class="text-xs text-carbon-400">Безопасные татами в залах единоборств</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-lime-500/10 flex items-center justify-center shrink-0">
+              <span class="iconify text-lime-400" data-icon="lucide:locker"></span>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold mb-0.5">Комфортные раздевалки</h4>
+              <p class="text-xs text-carbon-400">Просторно, чисто, с душевыми</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-lime-500/10 flex items-center justify-center shrink-0">
+              <span class="iconify text-lime-400" data-icon="lucide:car"></span>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold mb-0.5">Удобная парковка</h4>
+              <p class="text-xs text-carbon-400">Своя парковка возле здания</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-lime-500/10 flex items-center justify-center shrink-0">
+              <span class="iconify text-lime-400" data-icon="lucide:smartphone"></span>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold mb-0.5">Мобильное приложение</h4>
+              <p class="text-xs text-carbon-400">Расписание онлайн и управление абонементом</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right relative">
+        <div class="relative rounded-2xl overflow-hidden aspect-[4/3] border border-lime-500/10">
+          <img src="https://picsum.photos/seed/modern-sports-center-gym/800/600" alt="Спортивный центр Импульс" class="w-full h-full object-cover opacity-80" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-carbon-950 via-transparent to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6">
+            <div class="glass rounded-xl px-4 py-3 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-lime-500/20 flex items-center justify-center text-xl">⚡</div>
+              <div>
+                <div class="text-sm font-bold">ул. Бородина, 28</div>
+                <div class="text-[10px] text-carbon-500 tracking-wider uppercase">Химмаш • Екатеринбург</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -top-6 -right-6 w-24 h-24 border border-lime-500/10 rounded-2xl -z-10"></div>
+        <div class="absolute -bottom-6 -left-6 w-16 h-16 bg-lime-500/5 rounded-xl -z-10"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="relative py-24 md:py-32 overflow-hidden">
+  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lime-500/20 to-transparent"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(132,204,22,0.06)_0%,transparent_50%)]"></div>
+  <div class="max-w-4xl mx-auto px-5 text-center">
+    <div class="reveal">
+      <div class="text-6xl md:text-8xl font-black text-lime-500/5 mb-4 select-none">⚡</div>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4">
+        Найди свой <span class="gradient-text">Импульс</span>
+      </h2>
+      <p class="text-carbon-400 max-w-lg mx-auto mb-10 text-sm leading-relaxed">
+        Запишитесь на пробную тренировку за 500 ₽ или приходите на первое занятие — мы подберём направление и группу!
+      </p>
+    </div>
+
+    <!-- Form -->
+    <div class="reveal max-w-md mx-auto">
+      <form id="signup-form" class="space-y-4">
+        <div>
+          <input type="text" id="form-name" placeholder="Ваше имя" required class="w-full px-5 py-3 rounded-xl bg-carbon-800 border border-white/10 text-white placeholder-carbon-500 text-sm focus:outline-none focus:border-lime-500/50 focus:ring-1 focus:ring-lime-500/30 transition-all">
+        </div>
+        <div>
+          <input type="tel" id="form-phone" placeholder="+7 (___) ___-__-__" required class="w-full px-5 py-3 rounded-xl bg-carbon-800 border border-white/10 text-white placeholder-carbon-500 text-sm focus:outline-none focus:border-lime-500/50 focus:ring-1 focus:ring-lime-500/30 transition-all">
+        </div>
+        <div>
+          <select id="form-dir" class="w-full px-5 py-3 rounded-xl bg-carbon-800 border border-white/10 text-carbon-400 text-sm focus:outline-none focus:border-lime-500/50 focus:ring-1 focus:ring-lime-500/30 transition-all appearance-none cursor-pointer">
+            <option value="">Выберите направление</option>
+            <optgroup label="🥊 Единоборства">
+              <option>Бокс</option>
+              <option>Кикбоксинг</option>
+              <option>Самбо</option>
+              <option>Тайский бокс (Муай-тай)</option>
+              <option>Тхэквондо</option>
+              <option>ММА / Рукопашный бой</option>
+            </optgroup>
+            <optgroup label="🏋️ Фитнес">
+              <option>Функциональный тренинг</option>
+              <option>HIIT</option>
+              <option>Pamp</option>
+              <option>Здоровая спина</option>
+              <option>Ягодицы + Пресс</option>
+              <option>Растяжка и Пластика</option>
+            </optgroup>
+          </select>
+        </div>
+        <button type="submit" class="w-full px-8 py-3.5 rounded-xl bg-lime-500 text-carbon-950 text-sm font-bold tracking-wider uppercase hover:bg-lime-400 hover:shadow-xl hover:shadow-lime-500/30 transition-all duration-300 flex items-center justify-center gap-2">
+          <span class="iconify" data-icon="lucide:zap"></span>
+          Записаться
+        </button>
+        <p class="text-[10px] text-carbon-600">Или позвоните: <a href="tel:+79292180104" class="text-lime-400/60 hover:text-lime-400 transition-colors">+7 (929) 218-01-04</a></p>
+      </form>
+    </div>
+
+    <!-- Contacts -->
+    <div class="reveal mt-14 grid sm:grid-cols-2 gap-5 max-w-lg mx-auto">
+      <a href="tel:+79292180104" class="glass rounded-xl p-5 flex items-center gap-4 group">
+        <div class="w-10 h-10 rounded-lg bg-lime-500/10 flex items-center justify-center shrink-0 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-lime-400" data-icon="lucide:phone"></span>
+        </div>
+        <div class="text-left">
+          <div class="text-sm font-semibold text-white group-hover:text-lime-400 transition-colors">+7 (929) 218-01-04</div>
+          <div class="text-[10px] text-carbon-500 tracking-wider uppercase">Запись и консультации</div>
+        </div>
+      </a>
+      <a href="tel:+73433822522" class="glass rounded-xl p-5 flex items-center gap-4 group">
+        <div class="w-10 h-10 rounded-lg bg-lime-500/10 flex items-center justify-center shrink-0 group-hover:bg-lime-500/20 transition-colors">
+          <span class="iconify text-lime-400" data-icon="lucide:phone"></span>
+        </div>
+        <div class="text-left">
+          <div class="text-sm font-semibold text-white group-hover:text-lime-400 transition-colors">+7 (343) 382-25-22</div>
+          <div class="text-[10px] text-carbon-500 tracking-wider uppercase">Дополнительный</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Info -->
+    <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-carbon-500">
+      <div class="flex items-center gap-2">
+        <span class="iconify text-lime-400/50" data-icon="lucide:map-pin"></span>
+        ул. Бородина, 28
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="iconify text-lime-400/50" data-icon="lucide:clock"></span>
+        Ежедневно 09:00–22:00
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="iconify text-lime-400/50" data-icon="lucide:smartphone"></span>
+        Мобильное приложение
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="relative py-12 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-lime-500 flex items-center justify-center text-carbon-950 font-black text-xs">⚡</div>
+        <div>
+          <span class="text-sm font-bold">ИМПУЛЬС</span>
+          <span class="text-xs text-carbon-500 ml-2">Спортивный центр • Химмаш</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6 text-xs text-carbon-500">
+        <span>ул. Бородина, 28</span>
+        <span class="w-1 h-1 rounded-full bg-carbon-700"></span>
+        <span>09:00–22:00</span>
+        <span class="w-1 h-1 rounded-full bg-carbon-700"></span>
+        <span>© 2025</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div id="toast" class="px-5 py-3 rounded-xl bg-lime-500 text-carbon-950 text-sm font-bold shadow-xl shadow-lime-500/30 flex items-center gap-2">
+  <span class="iconify" data-icon="lucide:check-circle-2"></span>
+  <span id="toast-msg">Заявка отправлена!</span>
+</div>
+
+<script>
+// Preloader
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 1200);
+});
+
+// Scroll Progress
+const progressBar = document.getElementById('scroll-progress');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  progressBar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+});
+
+// Reveal on Scroll
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => revealObserver.observe(el));
+
+// Counter Animation
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !e.target.dataset.counted) {
+      e.target.dataset.counted = 'true';
+      const target = parseInt(e.target.dataset.target);
+      const duration = 2000, start = performance.now();
+      const animate = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        e.target.textContent = Math.floor(target * eased);
+        if (progress < 1) requestAnimationFrame(animate);
+        else e.target.textContent = target;
+      };
+      requestAnimationFrame(animate);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+// Mobile Menu
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobile-menu');
+const menuOverlay = document.getElementById('menu-overlay');
+const closeMenu = document.getElementById('close-menu');
+
+function openMenu() {
+  mobileMenu.classList.add('open');
+  menuOverlay.style.opacity = '1';
+  menuOverlay.style.pointerEvents = 'auto';
+  document.body.style.overflow = 'hidden';
+  const lines = burger.querySelectorAll('.burger-line');
+  lines[0].style.transform = 'rotate(45deg) translate(3px, 3px)';
+  lines[1].style.opacity = '0';
+  lines[2].style.transform = 'rotate(-45deg) translate(3px, -3px)';
+  lines[2].style.width = '20px';
+}
+function closeMenuFn() {
+  mobileMenu.classList.remove('open');
+  menuOverlay.style.opacity = '0';
+  menuOverlay.style.pointerEvents = 'none';
+  document.body.style.overflow = '';
+  const lines = burger.querySelectorAll('.burger-line');
+  lines[0].style.transform = '';
+  lines[1].style.opacity = '1';
+  lines[2].style.transform = '';
+  lines[2].style.width = '';
+}
+burger.addEventListener('click', openMenu);
+closeMenu.addEventListener('click', closeMenuFn);
+menuOverlay.addEventListener('click', closeMenuFn);
+document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMenuFn));
+
+// Particle Canvas
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const P_COUNT = 50;
+
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor() { this.reset(true); }
+  reset(init = false) {
+    this.x = Math.random() * canvas.width;
+    this.y = init ? Math.random() * canvas.height : -10;
+    this.size = Math.random() * 2 + 0.5;
+    this.speedY = Math.random() * 0.4 + 0.1;
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.opacity = Math.random() * 0.2 + 0.05;
+  }
+  update() {
+    this.y += this.speedY;
+    this.x += this.speedX;
+    if (this.y > canvas.height + 10 || this.x < -10 || this.x > canvas.width + 10) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(163, 230, 53, ${this.opacity})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < P_COUNT; i++) particles.push(new Particle());
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(163, 230, 53, ${0.04 * (1 - dist / 120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// Form Submission
+const form = document.getElementById('signup-form');
+const toast = document.getElementById('toast');
+const toastMsg = document.getElementById('toast-msg');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = document.getElementById('form-name').value;
+  const phone = document.getElementById('form-phone').value;
+  if (!name || !phone) { showToast('Пожалуйста, заполните все поля', true); return; }
+  const btn = form.querySelector('button[type="submit"]');
+  btn.innerHTML = '<span class="iconify animate-spin" data-icon="lucide:loader-2"></span> Отправка...';
+  btn.disabled = true;
+  setTimeout(() => {
+    showToast(`${name}, заявка отправлена! Мы свяжемся с вами.`);
+    form.reset();
+    btn.innerHTML = '<span class="iconify" data-icon="lucide:zap"></span> Записаться';
+    btn.disabled = false;
+  }, 1500);
+});
+
+function showToast(msg, isError = false) {
+  toastMsg.textContent = msg;
+  toast.style.background = isError ? '#991B1B' : '#84CC16';
+  toast.style.color = isError ? '#fff' : '#0A0F1A';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+// Phone Mask
+const phoneInput = document.getElementById('form-phone');
+phoneInput.addEventListener('input', (e) => {
+  let val = e.target.value.replace(/\D/g, '');
+  if (val.length > 0) {
+    if (val[0] === '8') val = '7' + val.slice(1);
+    if (val[0] !== '7') val = '7' + val;
+  }
+  let formatted = '';
+  if (val.length > 0) formatted = '+' + val[0];
+  if (val.length > 1) formatted += ' (' + val.slice(1, 4);
+  if (val.length > 4) formatted += ') ' + val.slice(4, 7);
+  if (val.length > 7) formatted += '-' + val.slice(7, 9);
+  if (val.length > 9) formatted += '-' + val.slice(9, 11);
+  e.target.value = formatted;
+});
+
+// Smooth Scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+</script>
+</body>
+</html>
